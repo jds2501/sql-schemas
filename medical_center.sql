@@ -4,17 +4,11 @@ CREATE DATABASE medicalcenter;
 
 \c medicalcenter
 
-CREATE TABLE medicalCenter (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE doctor (
     id SERIAL PRIMARY KEY,
     firstName VARCHAR(30) NOT NULL,
     lastName VARCHAR(30) NOT NULL,
-    medicalID INTEGER NOT NULL,
-    FOREIGN KEY (medicalID) REFERENCES medicalCenter(id)
+    medicalID INTEGER NOT NULL
 );
 
 CREATE TABLE patient (
@@ -23,24 +17,24 @@ CREATE TABLE patient (
     lastName VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE doctor_patient (
-    doctorid INTEGER,
-    patientid INTEGER,
-    PRIMARY KEY (doctorid, patientid),
-    FOREIGN KEY (doctorid) REFERENCES doctor(id),
-    FOREIGN KEY (patientid) REFERENCES patient(id)
-);
-
 CREATE TABLE visit (
     id SERIAL PRIMARY KEY,
     patientid INTEGER NOT NULL,
+    doctorid INTEGER NOT NULL,
     visitDate DATE,
-    FOREIGN KEY (patientid) REFERENCES patient(id)
+    FOREIGN KEY (patientid) REFERENCES patient(id),
+    FOREIGN KEY (doctorid) REFERENCES doctor(id)
 );
 
 CREATE TABLE disease (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50),
+    name VARCHAR(50)
+);
+
+CREATE TABLE diagnosis (
+    id SERIAL PRIMARY KEY,
     visitid INTEGER NOT NULL,
-    FOREIGN KEY (visitid) REFERENCES visit(id)
+    diseaseid INTEGER NOT NULL,
+    FOREIGN KEY (visitid) REFERENCES visit(id),
+    FOREIGN KEY (diseaseid) REFERENCES disease(id)
 );
